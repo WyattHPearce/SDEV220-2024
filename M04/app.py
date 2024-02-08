@@ -22,10 +22,12 @@ class Book(db.Model):
         return f"id: {self.id}, book_name: {self.book_name}, " + \
             f"author: {self.author}, publisher: {self.publisher}"
 
+# Index
 @app.route('/')
 def index():
     return 'Hello!'
 
+# Get all books
 @app.route('/books')
 def get_books():
     books = Book.query.all()
@@ -42,17 +44,19 @@ def get_books():
 
     return {'books': output}
 
+# CREATE (C) in CRUD
 @app.route('/books', methods=['POST'])
 def create_book() -> str:
     book = Book()
-    book.id = request.json['id'],
-    book.book_name = request.json['book_name'],
-    book.author = request.json['author'],
+    book.id = request.json['id']
+    book.book_name = request.json['book_name']
+    book.author = request.json['author']
     book.publisher = request.json['publisher']
     db.session.add(book)
     db.session.commit()
     return {'id': book.id}
 
+# READ (R) in CRUD
 @app.route('/books/<id>')
 def get_book(id):
     book = Book.query.get_or_404(id)
@@ -62,3 +66,14 @@ def get_book(id):
         'author': book.author,
         'publisher': book.publisher
     }
+
+# DELETE (D) in CRUD
+@app.route('/books/<id>', methods=['DELETE'])
+def delete_book(id):
+    book = Book.query.get(id)
+    if book is None:
+        return {"error": "book not found"}
+    else:
+        db.session.delete(book)
+        db.session.commit()
+        return {"message": "book deleted"}
