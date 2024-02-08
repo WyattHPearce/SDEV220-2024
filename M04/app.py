@@ -45,9 +45,9 @@ def get_books():
 @app.route('/books', methods=['POST'])
 def create_book() -> str:
     book = Book()
-    book.id = request.json['id'],
-    book.book_name = request.json['book_name'],
-    book.author = request.json['author'],
+    book.id = request.json['id']
+    book.book_name = request.json['book_name']
+    book.author = request.json['author']
     book.publisher = request.json['publisher']
     db.session.add(book)
     db.session.commit()
